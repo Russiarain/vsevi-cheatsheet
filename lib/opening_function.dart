@@ -14,3 +14,18 @@ double initCooling(double oat, double ewt, double compSpd) {
       0.00008931248 * compSpd * ewt * oat +
       20.432458;
 }
+
+double initHeating(double oat, double ewt, double compSpd) {
+  return 1.0102612 * compSpd -
+      0.23548275 * ewt +
+      1.7016809 * oat -
+      0.00082756589 * compSpd * pow(oat, 2) +
+      0.00023077973 * ewt * pow(oat, 2) +
+      0.032889717 * pow(oat, 2) -
+      0.00042276831 * pow(oat, 3) -
+      0.0047187125 * compSpd * ewt -
+      0.0040811279 * compSpd * oat -
+      0.02283985 * ewt * oat +
+      0.00034302447 * compSpd * oat * ewt +
+      4.5020846;
+}

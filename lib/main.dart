@@ -163,7 +163,9 @@ class _HomePageState extends State<HomePage> {
 
   void updateOpening() {
     setState(() {
-      opening = initCooling(oat, ewt, compSpd);
+      opening = mode == RunMode.cooling
+          ? initCooling(oat, ewt, compSpd)
+          : initHeating(oat, ewt, compSpd);
     });
   }
 
@@ -389,10 +391,15 @@ class _HomePageState extends State<HomePage> {
                                     ))),
                             lineBarsData: [
                               LineChartBarData(
-                                spots: oatXCooling
-                                    .map((e) =>
-                                        FlSpot(e, initCooling(e, ewt, compSpd)))
-                                    .toList(),
+                                spots: mode == RunMode.cooling
+                                    ? oatXCooling
+                                        .map((e) => FlSpot(
+                                            e, initCooling(e, ewt, compSpd)))
+                                        .toList()
+                                    : oatXHeating
+                                        .map((e) => FlSpot(
+                                            e, initHeating(e, ewt, compSpd)))
+                                        .toList(),
                                 isCurved: true,
                                 gradient: LinearGradient(
                                   colors: gradientColors,
@@ -427,10 +434,15 @@ class _HomePageState extends State<HomePage> {
                                     ))),
                             lineBarsData: [
                               LineChartBarData(
-                                spots: ewtXCooling
-                                    .map((e) =>
-                                        FlSpot(e, initCooling(oat, e, compSpd)))
-                                    .toList(),
+                                spots: mode == RunMode.cooling
+                                    ? ewtXCooling
+                                        .map((e) => FlSpot(
+                                            e, initCooling(oat, e, compSpd)))
+                                        .toList()
+                                    : ewtXHeating
+                                        .map((e) => FlSpot(
+                                            e, initHeating(oat, e, compSpd)))
+                                        .toList(),
                                 isCurved: true,
                                 gradient: LinearGradient(
                                   colors: ewtColors,
@@ -465,10 +477,15 @@ class _HomePageState extends State<HomePage> {
                                     ))),
                             lineBarsData: [
                               LineChartBarData(
-                                spots: spdXCooling
-                                    .map((e) =>
-                                        FlSpot(e, initCooling(oat, ewt, e)))
-                                    .toList(),
+                                spots: mode == RunMode.cooling
+                                    ? spdXCooling
+                                        .map((e) =>
+                                            FlSpot(e, initCooling(oat, ewt, e)))
+                                        .toList()
+                                    : spdXHeating
+                                        .map((e) =>
+                                            FlSpot(e, initHeating(oat, ewt, e)))
+                                        .toList(),
                                 isCurved: true,
                                 gradient: LinearGradient(
                                   colors: spdColors,

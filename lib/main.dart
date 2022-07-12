@@ -125,9 +125,17 @@ class _HomePageState extends State<HomePage> {
   final oatTextController = TextEditingController();
   final compSpdTextController = TextEditingController();
 
-  List<Color> gradientColors = [
-    const Color(0xff23b6e6),
-    const Color(0xff02d39a),
+  List<Color> gradientColors = const [
+    Color(0xff23b6e6),
+    Color(0xff02d39a),
+  ];
+  List<Color> ewtColors = const [
+    Color.fromARGB(255, 210, 41, 11),
+    Color.fromARGB(255, 137, 226, 4),
+  ];
+  List<Color> spdColors = const [
+    Color.fromARGB(255, 51, 35, 230),
+    Color.fromARGB(255, 225, 71, 138),
   ];
 
   @override
@@ -425,7 +433,7 @@ class _HomePageState extends State<HomePage> {
                                     .toList(),
                                 isCurved: true,
                                 gradient: LinearGradient(
-                                  colors: gradientColors,
+                                  colors: ewtColors,
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
                                 ),
@@ -463,7 +471,7 @@ class _HomePageState extends State<HomePage> {
                                     .toList(),
                                 isCurved: true,
                                 gradient: LinearGradient(
-                                  colors: gradientColors,
+                                  colors: spdColors,
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
                                 ),

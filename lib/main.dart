@@ -613,14 +613,15 @@ class RunModeCard extends StatelessWidget {
       child: Card(
         margin: const EdgeInsets.all(16),
         color: mode == thisMode
-            ? Theme.of(context).colorScheme.primary
-            : Theme.of(context).colorScheme.secondary,
+            ? Theme.of(context).colorScheme.primaryContainer
+            : Theme.of(context).colorScheme.background,
         child: SizedBox(
             width: double.infinity,
             child: Center(
                 child: Text(
               thisMode == RunMode.cooling ? 'Cooling' : 'Heating',
-              style: Theme.of(context).textTheme.displayLarge,
+              style: Theme.of(context).textTheme.displayLarge!.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer),
             ))),
       ),
     );

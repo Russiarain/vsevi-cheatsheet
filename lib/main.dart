@@ -187,7 +187,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final coolingAdjustable = Column(
-      key: const Key('cooling'),
       children: [
         Flexible(
           flex: 1,
@@ -241,7 +240,6 @@ class _HomePageState extends State<HomePage> {
     );
 
     final heatingAdjustable = Column(
-      key: const Key('heating'),
       children: [
         Flexible(
           flex: 1,
@@ -350,12 +348,9 @@ class _HomePageState extends State<HomePage> {
                         Flexible(
                           flex: 2,
                           fit: FlexFit.tight,
-                          child: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 600),
-                            child: mode == RunMode.cooling
-                                ? coolingAdjustable
-                                : heatingAdjustable,
-                          ),
+                          child: mode == RunMode.cooling
+                              ? coolingAdjustable
+                              : heatingAdjustable,
                         ),
                       ],
                     )),

@@ -69,6 +69,50 @@ class _HomePageState extends State<HomePage> {
   static const ewtBoundHeating = [25.0, 50.0];
   static const spdBoundHeating = [30.0, 60.0];
 
+  static const axisDivisions = 600;
+
+  final oatXCooling = List.generate(
+      axisDivisions,
+      (index) =>
+          oatBoundCooling[0] +
+          (oatBoundCooling[1] - oatBoundCooling[0]) *
+              index /
+              (axisDivisions - 1));
+  final ewtXCooling = List.generate(
+      axisDivisions,
+      (index) =>
+          ewtBoundCooling[0] +
+          (ewtBoundCooling[1] - ewtBoundCooling[0]) *
+              index /
+              (axisDivisions - 1));
+  final spdXCooling = List.generate(
+      axisDivisions,
+      (index) =>
+          spdBoundCooling[0] +
+          (spdBoundCooling[1] - spdBoundCooling[0]) *
+              index /
+              (axisDivisions - 1));
+  final oatXHeating = List.generate(
+      axisDivisions,
+      (index) =>
+          oatBoundHeating[0] +
+          (oatBoundHeating[1] - oatBoundHeating[0]) *
+              index /
+              (axisDivisions - 1));
+  final ewtXHeating = List.generate(
+      axisDivisions,
+      (index) =>
+          ewtBoundHeating[0] +
+          (ewtBoundHeating[1] - ewtBoundHeating[0]) *
+              index /
+              (axisDivisions - 1));
+  final spdXHeating = List.generate(
+      axisDivisions,
+      (index) =>
+          spdBoundHeating[0] +
+          (spdBoundHeating[1] - spdBoundHeating[0]) *
+              index /
+              (axisDivisions - 1));
   late double ewt;
   late double oat;
   late double compSpd;
@@ -317,15 +361,10 @@ class _HomePageState extends State<HomePage> {
                       fit: FlexFit.tight,
                       child: LineChart(LineChartData(lineBarsData: [
                         LineChartBarData(
-                          spots: const [
-                            FlSpot(0, 3),
-                            FlSpot(2.6, 2),
-                            FlSpot(4.9, 5),
-                            FlSpot(6.8, 3.1),
-                            FlSpot(8, 4),
-                            FlSpot(9.5, 3),
-                            FlSpot(11, 4),
-                          ],
+                          spots: oatXCooling
+                              .map((e) =>
+                                  FlSpot(e, initCooling(e, ewt, compSpd)))
+                              .toList(),
                           isCurved: true,
                           gradient: LinearGradient(
                             colors: gradientColors,

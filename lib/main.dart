@@ -283,103 +283,200 @@ class _HomePageState extends State<HomePage> {
         ),
       ],
     );
+
     return Scaffold(
-      body: Column(
+      body: Row(
         children: [
           Flexible(
-              flex: 6,
-              child: Row(
-                children: [
-                  Flexible(
-                    flex: 1,
-                    fit: FlexFit.tight,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
+            flex: 6,
+            fit: FlexFit.tight,
+            child: Column(
+              children: [
+                Flexible(
+                    flex: 6,
+                    child: Row(
                       children: [
                         Flexible(
                           flex: 1,
                           fit: FlexFit.tight,
-                          child: RunModeCard(
-                              mode: mode,
-                              thisMode: RunMode.cooling,
-                              onTap: () {
-                                if (mode != RunMode.cooling) {
-                                  setState(() {
-                                    mode = RunMode.cooling;
-                                    setValueDefault();
-                                  });
-                                  updateOpening();
-                                }
-                              }),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Flexible(
+                                flex: 1,
+                                fit: FlexFit.tight,
+                                child: RunModeCard(
+                                    mode: mode,
+                                    thisMode: RunMode.cooling,
+                                    onTap: () {
+                                      if (mode != RunMode.cooling) {
+                                        setState(() {
+                                          mode = RunMode.cooling;
+                                          setValueDefault();
+                                        });
+                                        updateOpening();
+                                      }
+                                    }),
+                              ),
+                              Flexible(
+                                flex: 1,
+                                fit: FlexFit.tight,
+                                child: RunModeCard(
+                                    mode: mode,
+                                    thisMode: RunMode.heating,
+                                    onTap: () {
+                                      if (mode != RunMode.heating) {
+                                        setState(() {
+                                          mode = RunMode.heating;
+                                          setValueDefault();
+                                        });
+                                        updateOpening();
+                                      }
+                                    }),
+                              ),
+                            ],
+                          ),
                         ),
                         Flexible(
-                          flex: 1,
+                          flex: 2,
                           fit: FlexFit.tight,
-                          child: RunModeCard(
-                              mode: mode,
-                              thisMode: RunMode.heating,
-                              onTap: () {
-                                if (mode != RunMode.heating) {
-                                  setState(() {
-                                    mode = RunMode.heating;
-                                    setValueDefault();
-                                  });
-                                  updateOpening();
-                                }
-                              }),
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 600),
+                            child: mode == RunMode.cooling
+                                ? coolingAdjustable
+                                : heatingAdjustable,
+                          ),
                         ),
                       ],
-                    ),
-                  ),
-                  Flexible(
-                    flex: 2,
-                    fit: FlexFit.tight,
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 600),
-                      child: mode == RunMode.cooling
-                          ? coolingAdjustable
-                          : heatingAdjustable,
-                    ),
-                  ),
-                ],
-              )),
-          Flexible(
-              flex: 4,
-              child: Row(
-                children: [
-                  Flexible(
-                    flex: 1,
-                    fit: FlexFit.tight,
+                    )),
+                Flexible(
+                    flex: 4,
                     child: Center(
                         child: Text(
                       opening.toStringAsFixed(2),
                       textScaleFactor: 12,
-                    )),
+                    )))
+              ],
+            ),
+          ),
+          Flexible(
+              flex: 4,
+              fit: FlexFit.tight,
+              child: Column(
+                children: [
+                  Flexible(
+                      flex: 1,
+                      fit: FlexFit.tight,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: LineChart(LineChartData(
+                            titlesData: FlTitlesData(
+                                topTitles: AxisTitles(
+                                    axisNameSize: 36,
+                                    axisNameWidget: Text(
+                                      'OAT',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge,
+                                    ))),
+                            lineBarsData: [
+                              LineChartBarData(
+                                spots: oatXCooling
+                                    .map((e) =>
+                                        FlSpot(e, initCooling(e, ewt, compSpd)))
+                                    .toList(),
+                                isCurved: true,
+                                gradient: LinearGradient(
+                                  colors: gradientColors,
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                ),
+                                barWidth: 5,
+                                isStrokeCapRound: true,
+                                dotData: FlDotData(
+                                  show: false,
+                                ),
+                              )
+                            ])),
+                      )),
+                  const SizedBox(
+                    height: 12,
                   ),
                   Flexible(
                       flex: 1,
                       fit: FlexFit.tight,
-                      child: LineChart(LineChartData(lineBarsData: [
-                        LineChartBarData(
-                          spots: oatXCooling
-                              .map((e) =>
-                                  FlSpot(e, initCooling(e, ewt, compSpd)))
-                              .toList(),
-                          isCurved: true,
-                          gradient: LinearGradient(
-                            colors: gradientColors,
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                          ),
-                          barWidth: 5,
-                          isStrokeCapRound: true,
-                          dotData: FlDotData(
-                            show: false,
-                          ),
-                        )
-                      ])))
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: LineChart(LineChartData(
+                            titlesData: FlTitlesData(
+                                topTitles: AxisTitles(
+                                    axisNameSize: 36,
+                                    axisNameWidget: Text(
+                                      'EWT',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge,
+                                    ))),
+                            lineBarsData: [
+                              LineChartBarData(
+                                spots: ewtXCooling
+                                    .map((e) =>
+                                        FlSpot(e, initCooling(oat, e, compSpd)))
+                                    .toList(),
+                                isCurved: true,
+                                gradient: LinearGradient(
+                                  colors: gradientColors,
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                ),
+                                barWidth: 5,
+                                isStrokeCapRound: true,
+                                dotData: FlDotData(
+                                  show: false,
+                                ),
+                              )
+                            ])),
+                      )),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Flexible(
+                      flex: 1,
+                      fit: FlexFit.tight,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: LineChart(LineChartData(
+                            titlesData: FlTitlesData(
+                                topTitles: AxisTitles(
+                                    axisNameSize: 36,
+                                    axisNameWidget: Text(
+                                      'CompSpd',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge,
+                                    ))),
+                            lineBarsData: [
+                              LineChartBarData(
+                                spots: spdXCooling
+                                    .map((e) =>
+                                        FlSpot(e, initCooling(oat, ewt, e)))
+                                    .toList(),
+                                isCurved: true,
+                                gradient: LinearGradient(
+                                  colors: gradientColors,
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                ),
+                                barWidth: 5,
+                                isStrokeCapRound: true,
+                                dotData: FlDotData(
+                                  show: false,
+                                ),
+                              )
+                            ])),
+                      )),
                 ],
-              ))
+              )),
         ],
       ),
     );

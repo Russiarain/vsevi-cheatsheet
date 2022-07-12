@@ -1,3 +1,5 @@
+import 'package:exv_opening/opening_function.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
@@ -72,6 +74,11 @@ class _HomePageState extends State<HomePage> {
   final oatTextController = TextEditingController();
   final compSpdTextController = TextEditingController();
 
+  List<Color> gradientColors = [
+    const Color(0xff23b6e6),
+    const Color(0xff02d39a),
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -97,7 +104,7 @@ class _HomePageState extends State<HomePage> {
 
   void updateOpening() {
     setState(() {
-      opening = ewt * 0.22 + oat * 0.15 + compSpd * compSpd * 0.003;
+      opening = initCooling(oat, ewt, compSpd);
     });
   }
 
@@ -206,11 +213,46 @@ class _HomePageState extends State<HomePage> {
               )),
           Flexible(
               flex: 4,
-              child: Center(
-                  child: Text(
-                opening.toStringAsFixed(2),
-                textScaleFactor: 15,
-              )))
+              child: Row(
+                children: [
+                  Flexible(
+                    flex: 1,
+                    fit: FlexFit.tight,
+                    child: Center(
+                        child: Text(
+                      opening.toStringAsFixed(2),
+                      textScaleFactor: 12,
+                    )),
+                  ),
+                  Flexible(
+                      flex: 1,
+                      fit: FlexFit.tight,
+                      child: LineChart(LineChartData(lineBarsData: [
+                        LineChartBarData(
+                          spots: const [
+                            FlSpot(0, 3),
+                            FlSpot(2.6, 2),
+                            FlSpot(4.9, 5),
+                            FlSpot(6.8, 3.1),
+                            FlSpot(8, 4),
+                            FlSpot(9.5, 3),
+                            FlSpot(11, 4),
+                          ],
+                          isCurved: true,
+                          gradient: LinearGradient(
+                            colors: gradientColors,
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                          ),
+                          barWidth: 5,
+                          isStrokeCapRound: true,
+                          dotData: FlDotData(
+                            show: false,
+                          ),
+                        )
+                      ])))
+                ],
+              ))
         ],
       ),
     );

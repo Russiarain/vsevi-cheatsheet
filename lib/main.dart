@@ -62,13 +62,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var ewt = 12.0;
-  var oat = 20.0;
-  var compSpd = 30.0;
+  static const oatBoundCooling = [-10.0, 46.0];
+  static const ewtBoundCooling = [15.0, 25.0];
+  static const spdBoundCooling = [30.0, 60.0];
+  static const oatBoundHeating = [-25.0, 30.0];
+  static const ewtBoundHeating = [25.0, 50.0];
+  static const spdBoundHeating = [30.0, 60.0];
+
+  late double ewt;
+  late double oat;
+  late double compSpd;
 
   var mode = RunMode.cooling;
 
-  var opening = 40.0;
+  late double opening;
 
   final ewtTextController = TextEditingController();
   final oatTextController = TextEditingController();
@@ -82,13 +89,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    ewtTextController.text = ewt.toStringAsFixed(2);
-    oatTextController.text = oat.toStringAsFixed(2);
-    compSpdTextController.text = compSpd.toStringAsFixed(2);
+
+    setValueDefault();
 
     ewtTextController.addListener(updateOpening);
     oatTextController.addListener(updateOpening);
     compSpdTextController.addListener(updateOpening);
+    updateOpening();
   }
 
   @override
@@ -108,8 +115,130 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void setValueDefault() {
+    if (mode == RunMode.cooling) {
+      oat = (oatBoundCooling[0] + oatBoundCooling[1]) / 2;
+      ewt = (ewtBoundCooling[0] + ewtBoundCooling[1]) / 2;
+      compSpd = (spdBoundCooling[0] + spdBoundCooling[1]) / 2;
+    } else {
+      oat = (oatBoundHeating[0] + oatBoundHeating[1]) / 2;
+      ewt = (ewtBoundHeating[0] + ewtBoundHeating[1]) / 2;
+      compSpd = (spdBoundHeating[0] + spdBoundHeating[1]) / 2;
+    }
+    ewtTextController.text = ewt.toStringAsFixed(2);
+    oatTextController.text = oat.toStringAsFixed(2);
+    compSpdTextController.text = compSpd.toStringAsFixed(2);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final coolingAdjustable = Column(
+      key: const Key('cooling'),
+      children: [
+        Flexible(
+          flex: 1,
+          fit: FlexFit.tight,
+          child: DataAdjustable(
+              lowerLimit: oatBoundCooling[0],
+              upperLimit: oatBoundCooling[1],
+              name: 'OAT',
+              value: oat,
+              textController: oatTextController,
+              onSliderChanged: (val) {
+                setState(() {
+                  oat = val;
+                  oatTextController.text = val.toStringAsFixed(2);
+                });
+              }),
+        ),
+        Flexible(
+          flex: 1,
+          fit: FlexFit.tight,
+          child: DataAdjustable(
+              lowerLimit: ewtBoundCooling[0],
+              upperLimit: ewtBoundCooling[1],
+              name: 'EWT',
+              value: ewt,
+              textController: ewtTextController,
+              onSliderChanged: (val) {
+                setState(() {
+                  ewt = val;
+                  ewtTextController.text = val.toStringAsFixed(2);
+                });
+              }),
+        ),
+        Flexible(
+          flex: 1,
+          fit: FlexFit.tight,
+          child: DataAdjustable(
+              lowerLimit: spdBoundCooling[0],
+              upperLimit: spdBoundCooling[1],
+              name: 'CompSpd',
+              value: compSpd,
+              textController: compSpdTextController,
+              onSliderChanged: (val) {
+                setState(() {
+                  compSpd = val;
+                  compSpdTextController.text = val.toStringAsFixed(2);
+                });
+              }),
+        ),
+      ],
+    );
+
+    final heatingAdjustable = Column(
+      key: const Key('heating'),
+      children: [
+        Flexible(
+          flex: 1,
+          fit: FlexFit.tight,
+          child: DataAdjustable(
+              lowerLimit: oatBoundHeating[0],
+              upperLimit: oatBoundHeating[1],
+              name: 'OAT',
+              value: oat,
+              textController: oatTextController,
+              onSliderChanged: (val) {
+                setState(() {
+                  oat = val;
+                  oatTextController.text = val.toStringAsFixed(2);
+                });
+              }),
+        ),
+        Flexible(
+          flex: 1,
+          fit: FlexFit.tight,
+          child: DataAdjustable(
+              lowerLimit: ewtBoundHeating[0],
+              upperLimit: ewtBoundHeating[1],
+              name: 'EWT',
+              value: ewt,
+              textController: ewtTextController,
+              onSliderChanged: (val) {
+                setState(() {
+                  ewt = val;
+                  ewtTextController.text = val.toStringAsFixed(2);
+                });
+              }),
+        ),
+        Flexible(
+          flex: 1,
+          fit: FlexFit.tight,
+          child: DataAdjustable(
+              lowerLimit: spdBoundHeating[0],
+              upperLimit: spdBoundHeating[1],
+              name: 'CompSpd',
+              value: compSpd,
+              textController: compSpdTextController,
+              onSliderChanged: (val) {
+                setState(() {
+                  compSpd = val;
+                  compSpdTextController.text = val.toStringAsFixed(2);
+                });
+              }),
+        ),
+      ],
+    );
     return Scaffold(
       body: Column(
         children: [
@@ -130,9 +259,13 @@ class _HomePageState extends State<HomePage> {
                               mode: mode,
                               thisMode: RunMode.cooling,
                               onTap: () {
-                                setState(() {
-                                  mode = RunMode.cooling;
-                                });
+                                if (mode != RunMode.cooling) {
+                                  setState(() {
+                                    mode = RunMode.cooling;
+                                    setValueDefault();
+                                  });
+                                  updateOpening();
+                                }
                               }),
                         ),
                         Flexible(
@@ -142,9 +275,13 @@ class _HomePageState extends State<HomePage> {
                               mode: mode,
                               thisMode: RunMode.heating,
                               onTap: () {
-                                setState(() {
-                                  mode = RunMode.heating;
-                                });
+                                if (mode != RunMode.heating) {
+                                  setState(() {
+                                    mode = RunMode.heating;
+                                    setValueDefault();
+                                  });
+                                  updateOpening();
+                                }
                               }),
                         ),
                       ],
@@ -153,60 +290,11 @@ class _HomePageState extends State<HomePage> {
                   Flexible(
                     flex: 2,
                     fit: FlexFit.tight,
-                    child: Column(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          fit: FlexFit.tight,
-                          child: DataAdjustable(
-                              lowerLimit: -20,
-                              upperLimit: 22,
-                              name: 'OAT',
-                              value: oat,
-                              textController: oatTextController,
-                              onSliderChanged: (val) {
-                                setState(() {
-                                  oat = val;
-                                  oatTextController.text =
-                                      val.toStringAsFixed(2);
-                                });
-                              }),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          fit: FlexFit.tight,
-                          child: DataAdjustable(
-                              lowerLimit: -20,
-                              upperLimit: 22,
-                              name: 'EWT',
-                              value: ewt,
-                              textController: ewtTextController,
-                              onSliderChanged: (val) {
-                                setState(() {
-                                  ewt = val;
-                                  ewtTextController.text =
-                                      val.toStringAsFixed(2);
-                                });
-                              }),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          fit: FlexFit.tight,
-                          child: DataAdjustable(
-                              lowerLimit: 30,
-                              upperLimit: 60,
-                              name: 'CompSpd',
-                              value: compSpd,
-                              textController: compSpdTextController,
-                              onSliderChanged: (val) {
-                                setState(() {
-                                  compSpd = val;
-                                  compSpdTextController.text =
-                                      val.toStringAsFixed(2);
-                                });
-                              }),
-                        ),
-                      ],
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 600),
+                      child: mode == RunMode.cooling
+                          ? coolingAdjustable
+                          : heatingAdjustable,
                     ),
                   ),
                 ],

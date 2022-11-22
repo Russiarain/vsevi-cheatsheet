@@ -62,9 +62,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static const oatBoundCooling = [-10.0, 46.0];
-  static const ewtBoundCooling = [15.0, 25.0];
-  static const spdBoundCooling = [30.0, 60.0];
+  static const oatBoundCooling = [-25.0, 35.0];
+  static const ewtBoundCooling = [15.0, 55.0];
+  static const spdBoundCooling = [30.0, 95.0];
   static const oatBoundHeating = [-25.0, 30.0];
   static const ewtBoundHeating = [25.0, 50.0];
   static const spdBoundHeating = [30.0, 60.0];
@@ -542,9 +542,9 @@ class DataAdjustable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.all(12),
+      margin: const EdgeInsets.all(4),
       child: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
             Flexible(

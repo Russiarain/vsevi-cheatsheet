@@ -1,4 +1,4 @@
-import 'package:exv_opening/opening_function.dart';
+import 'package:vsevi_cheatsheet/opening_function.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
